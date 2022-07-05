@@ -1,0 +1,11 @@
+# ansible-playbook -i inventory.yaml checkpoint.yaml
+---
+- hosts: logstash
+  become: true
+  roles:
+    - checkpoint
+  vars:
+    - customer_name: "Customer1"
+    - logsource : "{{ ansible_role_name }}"
+    - config_dir: "/etc/logstash/conf.d/{{ customer_name }}/{{ logsource }}"
+    - log_dir: "/var/log/logstash/{{ customer_name }}"

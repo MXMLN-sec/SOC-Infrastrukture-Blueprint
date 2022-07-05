@@ -1,0 +1,32 @@
+---
+- name: Create customer config directory
+  ansible.builtin.file:
+    path: "{{ config_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Create 01-input.conf file
+  template:
+    src: "01-input.conf.j2"
+    dest: "{{ config_dir }}/01-input.conf"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Create 50-filter.conf file
+  template:
+    src: "50-filter.conf.j2"
+    dest: "{{ config_dir }}/50-filter.conf"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Create 99-output.conf file
+  template:
+    src: "99-output.conf.j2"
+    dest: "{{ config_dir }}/99-output.conf"
+    owner: root
+    group: root
+    mode: "0644"

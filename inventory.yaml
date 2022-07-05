@@ -1,0 +1,6 @@
+logstash:
+  hosts:
+    logstash-01:
+      ansible_host: 192.168.136.129
+  vars:
+    ansible_user: ansible
