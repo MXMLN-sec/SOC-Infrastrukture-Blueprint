@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>de.materna</groupId>
+  <artifactId>jse-demo</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <name>jse-demo</name>
+  <!-- FIXME change it to the project's website -->
+  <url>https://www.materna.de</url>
+    <description>Java SE Sample with Junit4 Tests</description>
+  <organization>
+    <name>Materna Information Communications SE</name>
+    <url>https://www.materna.de</url>
+  </organization>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+  </properties>
+
+  <developers>
+    <developer>
+      <name>Vor Nachname</name>
+      <id>VuN</id>
+      <email>vor.nachname@materna.de</email>
+      <roles>
+        <role>Softwareentwickler</role>
+      </roles>
+      <organization>Materna SE</organization>
+      <organizationUrl>http://www.materna.de</organizationUrl>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <name>Vor Nachname</name>
+      <id>XyZ</id>
+      <email>vor.nachname@materna.de</email>
+      <roles>
+        <role>Produktmanager Architekt</role>
+      </roles>
+      <organization>Materna SE</organization>
+      <organizationUrl>http://www.materna.de</organizationUrl>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
+
+  <mailingLists>
+    <mailingList>
+      <name>Entwicklungsteam XXX Projekt</name>
+      <post>XXX@materna.de</post>
+    </mailingList>
+  </mailingLists>
+
+  <licenses>
+    <license>
+      <name>GPLv3</name>
+      <url>http://www.gnu.org/licenses/gpl.html</url>
+      <comments>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</comments>
+    </license>
+
+    <license>
+      <name>ASFLv2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+      <comments>Lizenz der Apache Software Foundation Version 2.0, January 2004</comments>
+    </license>
+    <license>
+      <name>LGPLv2.1</name>
+      <url>http://www.gnu.org/licenses/lgpl-2.1.html</url>
+      <comments>GNU Lesser General Public License v2.1, Version 2.1, February 1999</comments>
+    </license>
+    <license>
+      <name>BSD</name>
+      <url>http://www.opensource.org/licenses/bsd-license.php</url>
+      <comments>The BSD License 1993</comments>
+    </license>
+
+    <license>
+      <name>MIT X</name>
+      <url>http://www.opensource.org/licenses/bsd-license.php</url>
+      <comments>MIT X license</comments>
+    </license>
+
+  </licenses>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    <!-- Unused declared dependencies< -->
+    </dependency>
+	<dependency>
+	  <groupId>org.hamcrest</groupId>
+	  <artifactId>hamcrest-core</artifactId>
+	  <version>2.2</version>
+	  <scope>test</scope>
+   </dependency>
+  </dependencies>
+
+  <scm>
+    <url>https://vcs.materna.de/scm2/repo/alm/toolchain_standardisierung</url>
+    <connection>scm:git:git@vcs.materna.de/scm2/repo/alm/toolchain_standardisierung.git</connection>
+
+  </scm>
+
+  <distributionManagement>
+    <site>
+      <id>project-site</id>
+      <url>https://wiki.materna.de</url>
+    </site>
+  </distributionManagement>
+
+  <issueManagement>
+    <system>JIRA</system>
+        <url>https://venja.materna.de/jira/</url>
+  </issueManagement>
+
+  <build>
+    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+      <plugins>
+        <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
+        <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.1</version>
+		  <configuration>
+		  <showDeprecation>true</showDeprecation>
+          <showWarnings>true</showWarnings>
+		  <encoding>UTF-8</encoding>
+          <compilerArgs>
+            <arg>-verbose</arg>
+            <arg>-Xlint:all</arg>
+			 <arg>-XDcompilePolicy=simple</arg>
+            <arg>-Xplugin:ErrorProne</arg>
+			<arg>-XDcompilePolicy=simple</arg>
+			<arg>-J--add-opens=java.base/java.lang=ALL-UNNAMED</arg>
+            <arg>-J--add-opens=java.base/java.lang.reflect=ALL-UNNAMED</arg>
+            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+			<!-- Bug fixed in Java 17 https://github.com/google/error-prone/issues/1157 -->
+          </compilerArgs>
+		  <annotationProcessorPaths>
+            <path>
+              <groupId>com.google.errorprone</groupId>
+              <artifactId>error_prone_core</artifactId>
+              <version>2.9.0</version>
+            </path>
+            <!-- Other annotation processors go here.
+
+            If 'annotationProcessorPaths' is set, processors will no longer be
+            discovered on the regular -classpath; see also 'Using Error Prone
+            together with other annotation processors' below. -->
+          </annotationProcessorPaths>
+        </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.22.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.5.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+        </plugin>
+        <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
+        <plugin>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.9.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>3.1.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>3.0.0-M3</version>
+          <executions>
+            <execution>
+              <id>enforce</id>
+              <goals>
+                <goal>enforce</goal>
+              </goals>
+              <configuration>
+                <rules>
+                  <banDuplicatePomDependencyVersions/>
+                  <requireMavenVersion>
+                    <version>3.2.5</version>
+                    <message>Invalid Maven version. It should, at least, be 3.2.5</message>
+                  </requireMavenVersion>
+                  <requireJavaVersion>
+                    <version>1.8</version>
+                  </requireJavaVersion>
+                </rules>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+		<plugin>
+		  <groupId>org.gaul</groupId>
+		  <artifactId>modernizer-maven-plugin</artifactId>
+		  <version>2.3.0</version>
+		  <configuration>
+			<javaVersion>11</javaVersion>
+		  </configuration>
+		</plugin>
+        <plugin>
+          <groupId>org.owasp</groupId>
+          <artifactId>dependency-check-maven</artifactId>
+          <version>6.3.1</version>
+          <configuration>
+            <skipProvidedScope>true</skipProvidedScope>
+            <skipRuntimeScope>true</skipRuntimeScope>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>4.9.10</version>
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <commitIdGenerationMode>full</commitIdGenerationMode>
+                </configuration>
+            </plugin>
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>4.4.1</version>
+         </plugin>
+        <plugin>
+          <groupId>com.github.ferstl</groupId>
+          <artifactId>depgraph-maven-plugin</artifactId>
+          <version>3.3.0</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>4.4.1</version>
+        <configuration>
+          <xmlOutput>true</xmlOutput>
+          <!-- Optional directory to put spotbugs xdoc xml report -->
+          <xmlOutputDirectory>target/site</xmlOutputDirectory>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <version>6.4.1</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>aggregate</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>
+</project>
