@@ -3,10 +3,7 @@
 ## Command Line Arguments
 # NEW CUSTOMER or UPDATE CUSTOMER
 # GIT CONFIG OR EXPORT CONFIG
-# Customer Name
-# Customer Repository URL
 ##
-
 
 # -- Command Line Arguments
 # List all Configs (rolls) to select from
@@ -48,7 +45,9 @@ def preparation():
 
 
 	### Customer Repository
+	global temp_dir
 	temp_dir = tempfile.TemporaryDirectory()
+	global customer_repository_localpath
 	customer_repository_localpath = temp_dir.name + "-" + customer_name
 	# Check if a direcotry with the same name already exists
 	if(os.path.isdir(customer_repository_localpath)):
@@ -62,25 +61,27 @@ def preparation():
 
 	# Create a new Shovel branch with date in the name
 	date_today = date.today()
+	global customer_branch_shovel
 	customer_branch_shovel = "Shovel_" + date_today.strftime("%Y-%m-%d")
 	# Init Customer Repository
+	global customer_repository
 	customer_repository = git.Repo.init(customer_repository_localpath)
 
-	### Workaround: If a repository is empty it's not possible to create a new branch
-	# Check if necessary
-	dir = os.listdir(customer_repository_localpath)
-	if len(dir) == 0:
-		print("[+] Workaround for empty Master Repository required - empty README.md file will be created")
-		# Create an empty README.md file
-		open(customer_repository_localpath + "/README.md", 'a').close()
+	# ### Workaround: If a repository is empty it's not possible to create a new branch
+	# # Check if necessary
+	# dir = os.listdir(customer_repository_localpath)
+	# if len(dir) == 0:
+	# 	print("[+] Workaround for empty Master Repository required - empty README.md file will be created")
+	# 	# Create an empty README.md file
+	# 	open(customer_repository_localpath + "/README.md", 'a').close()
 
-		# Provide a list of files to stage
-		customer_repository.index.add(['README.md'])
+	# 	# Provide a list of files to stage
+	# 	customer_repository.index.add(['README.md'])
 
-		# Provide a commit message
-		customer_repository.index.commit('Initial commit.')
-		print("[+] Workaround finised")
-	### End Workaround
+	# 	# Provide a commit message
+	# 	customer_repository.index.commit('Initial commit.')
+	# 	print("[+] Workaround finised")
+	# ### End Workaround
 
 	# Create a Shovel branch
 	customer_repository.git.branch(customer_branch_shovel)
@@ -94,19 +95,33 @@ def preparation():
 
 def customer_config():
 	# Create Directories
-	pass
+	list = ["roles"]
+	for items in list:
+		path = os.path.join(customer_repository_localpath, items) 
+		try:
+			os.mkdir(path)
+		except OSError as error:
+			print(error)
+		open(path + "/.blank", 'a').close()
 
+	# Let user select roles
+	# config generator
 
 
 
 def refinishing():
 	# git add
+	customer_repository.git.add('--all')
+	
 	# git commit
+	customer_repository.git.commit('-m', 'First commit after shovel script run')
+
 	# git push
+	customer_repository.git.push('--set-upstream', 'origin', customer_branch_shovel)
+
 	# git close
 	# cleanup question?
 	#temp_dir.cleanup()
-	pass
 
 
 def main():
