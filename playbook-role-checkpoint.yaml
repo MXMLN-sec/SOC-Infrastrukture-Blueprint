@@ -1,7 +1,7 @@
 # ansible-playbook playbook-role-checkpoint.yaml
 ---
 - name: 'Checkpoint config'
-  hosts: logstash
+  hosts: node1
   become: true
   roles:
     - checkpoint
