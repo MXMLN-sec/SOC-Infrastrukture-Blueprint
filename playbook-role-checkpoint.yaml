@@ -1,6 +1,7 @@
-# ansible-playbook -i inventory.yaml checkpoint.yaml
+# ansible-playbook playbook-role-checkpoint.yaml
 ---
-- hosts: logstash
+- name: 'Checkpoint config'
+  hosts: logstash
   become: true
   roles:
     - checkpoint

@@ -1,0 +1,41 @@
+---
+- name: 'Create auto-updates.sh file'
+  ansible.builtin.template:
+    src: "auto-updates.sh.j2"
+    dest: "/usr/local/bin/auto-updates.sh"
+    owner: root
+    group: root
+    mode: "0755"
+
+
+- name: 'Create logrotate auto-updates file'
+  ansible.builtin.template:
+    src: "logrotate-auto-updates.j2"
+    dest: "/etc/logrotate.d/auto-updates"
+    owner: root
+    group: root
+    mode: "0644"
+
+
+- name: 'Create systemd auto-updates.timer file'
+  ansible.builtin.template:
+    src: "systemd-auto-updates.timer.j2"
+    dest: "/etc/systemd/system/auto-updates.timer"
+    owner: root
+    group: root
+    mode: "0644"
+
+
+- name: 'Create systemd auto-updates.service file'
+  ansible.builtin.template:
+    src: "systemd-auto-updates.service.j2"
+    dest: "/etc/systemd/system/auto-updates.service"
+    owner: root
+    group: root
+    mode: "0644"
+
+
+- name: 'Enable Systemd auto-updates.service'
+  ansible.builtin.systemd:
+    name: auto-updates
+    enabled: yes 
