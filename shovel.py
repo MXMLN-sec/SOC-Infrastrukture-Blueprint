@@ -17,16 +17,7 @@ import os
 from datetime import date
 import yaml
 
-def preparation():
-	# Open existing Blueprint Repository
-	blueprint_repository = git.Repo(".")
-
-	# Check if the Blueprint Repository is up to date
-	if blueprint_repository.is_dirty(untracked_files=True):
-		print("[!] The Repository is not up to date. Please use git pull to update the Repository")
-		#raise SystemExit
-
-
+def parser():
 	### Customer Details
 	parser = argparse.ArgumentParser(description='Generate Ansible configuration')
 
@@ -38,11 +29,22 @@ def preparation():
 	args = parser.parse_args()
 
 	# Customer Name
+	global customer_name
 	customer_name = args.customer
 	
 	# Customer Bitbucket Repository
+	global customer_repository_url
 	customer_repository_url = args.repo
 
+
+def preparation():
+	# Open existing Blueprint Repository
+	blueprint_repository = git.Repo(".")
+
+	# Check if the Blueprint Repository is up to date
+	if blueprint_repository.is_dirty(untracked_files=True):
+		print("[!] The Repository is not up to date. Please use git pull to update the Repository")
+		#raise SystemExit
 
 	### Customer Repository
 	global temp_dir
@@ -102,21 +104,29 @@ def customer_config():
 			os.mkdir(path)
 		except OSError as error:
 			print(error)
+		# workaround file creation: git ignores empty folders
 		open(path + "/.blank", 'a').close()
 
-	# Let user select roles
-	# config generator
+	# List the configuration parameters
+	index = -1
+	for role in os.listdir(r'roles'):
+		index += 1
+		print("{}: {}".format(index,role))
 
-
+	customer_roles = input("Which Roles should be deployed for " + customer_name + "? Enter the numbers from the list above and seperate with a comma: ")
+	print(customer_roles)
 
 def refinishing():
-	# git add
+	# git add#
+	print("[+] Git add all new files")
 	customer_repository.git.add('--all')
 	
 	# git commit
+	print("[+] Git commit")
 	customer_repository.git.commit('-m', 'First commit after shovel script run')
 
 	# git push
+	print("[+] Git push")
 	customer_repository.git.push('--set-upstream', 'origin', customer_branch_shovel)
 
 	# git close
@@ -125,9 +135,10 @@ def refinishing():
 
 
 def main():
-		preparation()
-		customer_config()
-		refinishing()
+	parser()
+	preparation()
+	customer_config()
+	refinishing()
 
 if __name__ == "__main__":
 		main()
