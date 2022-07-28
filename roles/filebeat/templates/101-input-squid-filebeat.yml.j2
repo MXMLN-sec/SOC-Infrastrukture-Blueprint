@@ -1,0 +1,28 @@
+# Input: Squid (access.log)
+- type: {{ squid_logtype | mandatory }}
+  # Change to true to enable this input configuration.
+  enabled: {{ squid_enabled | default('false')}}
+  # Paths that should be crawled and fetched. Glob based paths.
+  paths:
+  {% for path in squid_paths %}
+  - {{ path }}
+  {% endfor %}
+  # add "observer.vendor: squid"
+  processors:
+    - add_host_metadata:
+    - add_labels:
+        labels:
+          Customer: {{ customer_name | mandatory }}
+          Consumer: {{ consumer_name | mandatory  }}
+          Project: {{ project_name }}
+          Environment: {{ customer_environment | default('staging') }}
+    - add_fields:
+        target: ''
+        fields:
+          observer.product: {{ squid_observer_product | mandatory  }}
+          observer.vendor: {{ squid_observer_vendor | mandatory }}
+          observer.version: {{ squid_observer_version | mandatory  }}
+          observer.type: {{ squid_observer_type | mandatory  }}
+          observer.name: {{ ansible_facts.hostname | mandatory }}
+          observer.os.type: {{ ansible_facts.system | mandatory }}
+          event.dataset: {{ squid_event_dataset | mandatory  }}
