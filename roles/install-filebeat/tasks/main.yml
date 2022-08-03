@@ -6,4 +6,5 @@
   become: true
   ansible.builtin.systemd:
     name: filebeat.service
+    state: started
     enabled: yes 
