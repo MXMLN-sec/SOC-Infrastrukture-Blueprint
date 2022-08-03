@@ -1,0 +1,7 @@
+---
+- hosts: local
+  vars:
+    filebeat_rpm: filebeat-8.3.3-x86_64.rpm
+    filebeat_deb: filebeat-8.3.3-amd64.deb
+  roles:
+    - install-filebeat
