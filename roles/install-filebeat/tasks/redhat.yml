@@ -1,0 +1,33 @@
+---
+- name: RPM Datei kopieren
+  copy:
+    checksum: d3050717c119748b8900542d4171fb3d22a46980
+    src: '{{ filebeat_rpm }}'
+    dest: '/tmp/{{ filebeat_rpm }}'
+
+- name: GPG Key kopieren 
+  copy:
+    src: GPG-KEY-FileBeat
+    dest: /tmp/GPG-KEY-FileBeat
+
+- name: GPG-Key importieren
+  become: true
+  ansible.builtin.rpm_key:
+    state: present
+    key: /tmp/GPG-KEY-FileBeat
+
+- name: Installation Filebeat
+  become: true
+  ansible.builtin.dnf:
+    name: '/tmp/{{ filebeat_rpm }}'
+    state: present
+
+- name: RPM-Datei löschen
+  file:
+    path: '/tmp/{{ filebeat_rpm }}'
+    state: absent
+
+- name: GPG-Key-Datei löschen
+  file:
+    path: /tmp/GPG-KEY-FileBeat
+    state: absent

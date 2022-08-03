@@ -1,0 +1,8 @@
+---
+- include_tasks: redhat.yml
+  when: ansible_os_family == "RedHat"
+
+- name: 'Filebeat Dienst aktivieren'
+  ansible.builtin.systemd:
+    name: filebeat.service
+    enabled: yes 
