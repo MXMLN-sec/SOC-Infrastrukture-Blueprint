@@ -3,6 +3,8 @@
   when: ansible_os_family == "RedHat"
 
 - name: 'Filebeat Dienst aktivieren'
+  become: true
   ansible.builtin.systemd:
     name: filebeat.service
+    state: started
     enabled: yes 
