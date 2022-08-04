@@ -1,0 +1,75 @@
+###################### Filebeat Configuration #########################
+#
+# You can find the full configuration reference here:
+# https://www.elastic.co/guide/en/beats/filebeat/index.html
+
+# ============================== Filebeat inputs ===============================
+
+filebeat.inputs:
+
+- type: log
+  enabled: true
+  paths:
+    - /var/log/messages
+  tags: ["localhost_messages_log"]
+  fields:
+    codec: plain
+    type: localhost_messages_log
+  processors:
+    - add_host_metadata:
+    - add_labels:
+        labels:
+          Customer: Materna
+          Project: test
+          Environment: test
+
+setup.ilm.enabled: false
+
+# ============================== Filebeat modules ==============================
+
+filebeat.config.modules:
+  # Glob pattern for configuration loading
+  path: ${path.config}/modules.d/*.yml
+
+  # Set to true to enable config reloading
+  reload.enabled: false
+
+  # Period on which files under path should be checked for changes
+  #reload.period: 10s
+
+# ======================= Elasticsearch template setting =======================
+
+setup.template.settings:
+  index.number_of_shards: 1
+  #index.codec: best_compression
+  #_source.enabled: false
+
+# ================================== Outputs ===================================
+
+# ------------------------------ Logstash Output -------------------------------
+output.logstash:
+  # The Logstash hosts
+  #hosts: ["139.2.34.33:5044"] # https Port 5050
+  hosts: ["do1-mat-ece-logcol-staging-01.mat-ece.rz.materna.com:5050"]
+  username: 'logstash_internal'
+  password: 'm0mj5la0ITDgByhnVidnHxg2s5WTpK9O'
+  ssl.certificate_authorities: ["/etc/pki/ca-trust/source/anchors/materna-infrastructure.pem"]
+
+# ================================= Processors =================================
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
+
+# ================================== Logging ===================================
+
+# Sets log level. The default log level is info.
+# Available log levels are: error, warning, info, debug
+logging.level: debug
+
+# At debug level, you can selectively enable logging only for some components.
+# To enable all selectors use ["*"]. Examples of other selectors are "beat",
+# "publisher", "service".
+#logging.selectors: ["*"]

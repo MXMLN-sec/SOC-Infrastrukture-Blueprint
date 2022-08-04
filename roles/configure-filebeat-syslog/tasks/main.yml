@@ -1,0 +1,13 @@
+---
+  - name: Filebeat Config-File
+    become: yes
+    template:
+        src: filebeat.yml.j2
+        dest: /etc/filebeat/filebeat.yml
+        backup: yes
+
+  - name: Dienst neustarten
+    become: yes
+    ansible.builtin.systemd:
+        name: filebeat
+        state: restarted
