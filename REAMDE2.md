@@ -37,33 +37,7 @@ Arguments:
 - `--customer` or`-c`
 - `--repo` or`-r`
 
-### [Vaults](#vaults)
 
-Password are stored in vault var files. The password is the 'XXXXXXXX' password in the DVTools password manager.
-To use the ansible vault automatically, set a password in the file `.vault_password`.
-
-
-# [Ansible](#ansible)
-
-## [Verifying Playbooks](#verify-playbook)
-
-You may want to verify your playbooks to catch syntax errors and other problems before you run them. The `ansible-playbook` command offers several options for verification, including
-
-  - ``--check`` -
-  - ``--diff`` -  
-  - ``--list-hosts`` - 
-  - ``--list-tasks`` - 
-  - ``--syntax-check`` - 
-
-### ansible-lint
-You can use `ansible-lint` for detailed, Ansible-specific feedback on your playbooks before you execute them. For example, if you run `ansible-lint` on the playbook called `verify-apache.yaml` you should get the following results:
-
-```shell
-$ ansible-lint verify-apache.yml
-[403] Package installs should not use latest
-verify-apache.yml:8
-Task/Handler: ensure apache is at the latest version
-```
 
 ## [Run Playbooks](#run-playbooks=)
 
@@ -73,13 +47,13 @@ ansible-playbook -i /path/to/my_inventory_file -u my_connection_user -k /path/to
 
 Loads ``my_playbook.yml`` from the current working directory and:
   - ``-i`` - uses ``my_inventory_file`` in the path provided for inventory to match the pattern.
-  - ``-u`` - connects :ref:`over SSH <connections>` as ``my_connection_user``.
+  - ``-u`` - connects `over SSH <connections>` as ``my_connection_user``.
   - ``-k`` - uses ``my_ssh_key`` in the path provided for SSH authentication.
   - ``-f`` - allocates 3 :ref:`forks <playbooks_strategies>`.
   - ``-T`` - sets a 30-second timeout.
   - ``-t`` - runs only tasks marked with the :ref:`tag <tags>` ``my_tag``.
-  - ``-m`` - loads :ref:`local modules <developing_locally>` from ``/path/to/my/modules``.
-  - ``-b`` - executes with elevated privileges (uses :ref:`become <become>`).
+  - ``-m`` - loads `local modules <developing_locally>` from ``/path/to/my/modules``.
+  - ``-b`` - executes with elevated privileges (uses `become <become>`).
   - ``-K`` - prompts the user for the become password.
 
 other parameters:
