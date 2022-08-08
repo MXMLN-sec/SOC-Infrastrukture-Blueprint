@@ -1,0 +1,23 @@
+---
+- name: "Enable Filebeat service"
+  ansible.builtin.service:
+    name: "{{ filebeat_service }}"
+    enabled: yes
+
+
+- name: "Start Filebeat service"
+  ansible.builtin.service:
+    name: "{{ filebeat_service }}"
+    state: started
+  register: filebeat_service_started
+
+
+- name: "Restart Filebeat service"
+  ansible.builtin.service:
+    name: "{{ filebeat_service }}"
+    state: restarted
+    enabled: yes
+  register: filebeat_service_restarted
+  when: >
+    filebeat_service_started is not defined or
+    not filebeat_service_started.changed

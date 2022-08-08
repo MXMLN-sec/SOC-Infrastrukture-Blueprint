@@ -1,7 +1,7 @@
 # ansible-playbook playbook-role-linux-patch.yaml
 ---
 - name: 'Deploy automated patching of Linux Systems'
-  hosts: node1
+  hosts: 
   become: true
 
   roles:

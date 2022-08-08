@@ -1,0 +1,34 @@
+---
+- name: Delete existing config file
+  ansible.builtin.file:
+    path: "{{ filebeat_config_file }}"
+    state: absent
+  tags:
+    - configure
+
+
+- name: Create new, empty config file
+  ansible.builtin.file:
+    path: "{{ filebeat_config_file }}"
+    state: touch
+  tags:
+    - configure
+
+
+- name: Add 'Do Not Edit' Disclaimer
+  ansible.builtin.lineinfile: 
+    dest: "{{ filebeat_config_file }}"
+    line: "{{ donotedit_disclaimer }}"
+  tags:
+    - configure
+
+
+- name: Create Filebeat config from multiple template files
+  ansible.builtin.blockinfile:
+    dest: "{{ filebeat_config_file }}"
+    marker: "## Rendering {{ item }}"
+    block: |
+      {{ lookup('template', '{{ role_path }}/templates/{{ item }}') }}
+  loop: "{{ applicable_templates }}"
+  tags:
+    - configure

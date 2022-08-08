@@ -1,0 +1,4 @@
+---
+- import_tasks: 01-install.yaml
+- import_tasks: 02-backup-config.yaml
+- import_tasks: 03-configure.yaml

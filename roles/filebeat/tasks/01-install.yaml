@@ -1,0 +1,90 @@
+---
+- name: "Gather distribution type"
+  ansible.builtin.assert:
+    that: >
+      ansible_facts.os_family == "RedHat" or
+      ansible_facts.os_family == "Debian"
+  tags:
+    - install
+    - gather_facts
+
+
+- name: "RedHat: Create Filebeat repository file"
+  ansible.builtin.yum_repository:
+    name: elastic
+    description: "Elastic repository for 8.x packages"
+    baseurl: "{{ filebeat_yum_repo_url }}"
+    gpgkey: "{{ filebeat_yum_repo_key }}"
+    gpgcheck: "yes"
+    enabled: "yes"
+  when: >
+    ansible_facts.os_family == 'RedHat'
+  tags:
+    - install
+    - create_repository_file
+
+
+- name: "RedHat: Install Filebeat package"
+  ansible.builtin.dnf:
+    name: "{{ filebeat_pkg }}"
+    state: "latest"
+  when: >
+    ansible_facts.os_family == 'RedHat'
+  notify:
+    - Enable Filebeat service
+    - Restart Filebeat service
+  tags:
+    - install
+    - install_filebeat
+
+
+- name: "Debian: Install Filebeat GPG key"
+  ansible.builtin.apt_key:
+    url: "{{ filebeat_apt_repo_key }}"
+  when: >
+    ansible_facts.os_family == 'Debian'
+  tags:
+    - install
+    - install_gpg_key
+
+
+- name: "Debian: Create Filebeat repository file"
+  ansible.builtin.apt_repository:
+    repo: "{{ filebeat_apt_repo_string }}"
+    filename: "{{ filebeat_apt_repo_filename }}"
+  when: >
+    ansible_facts.os_family == 'Debian'
+  tags:
+    - install
+    - create_repository_file
+
+
+- name: "Debian: Install Filebeat package"
+  ansible.builtin.package:
+    name: "{{ filebeat_pkg }}"
+  when: >
+    ansible_facts.os_family == 'Debian'
+  notify:
+    - Enable Filebeat service
+    - Restart Filebeat service
+  tags:
+    - install
+    - install_filebeat
+
+
+- name: "Create Materna Infrastructure CA directory"
+  ansible.builtin.file:
+    path: "{{ output_logstash_ca_dir }}"
+    state: directory
+  tags:
+    - install
+    - install_materna_ca
+
+
+- name: "Copy Materna Infrastructure CA"
+  ansible.builtin.copy:
+    src: "materna-infrastructure.crt.pem"
+    dest: "{{ output_logstash_ca }}"
+  tags:
+    - install
+    - install_materna_ca

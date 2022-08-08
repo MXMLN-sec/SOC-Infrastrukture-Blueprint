@@ -1,0 +1,25 @@
+# Filebeat Installation
+## YUM repo GPG key
+filebeat_yum_repo_key: "{{ elastic_yum_repo_key | default('https://packages.elastic.co/GPG-KEY-elasticsearch') }}"
+
+## YUM repo URL
+filebeat_yum_repo_url: "{{ elastic_yum_repo_url | default('https://artifacts.elastic.co/packages/8.x/yum') }}"
+
+## Extra YUM repo params
+filebeat_yum_repo_params: "{{ elastic_yum_repo_params | default({}) }}"
+
+## APT repo GPG key
+filebeat_apt_repo_key: "{{ elastic_apt_repo_key | default('https://artifacts.elastic.co/GPG-KEY-elasticsearch') }}"
+
+## APT repo
+filebeat_apt_repo_string: "{{ elastic_apt_repo_string | default('deb https://artifacts.elastic.co/packages/8.x/apt stable main') }}"
+filebeat_apt_repo_filename: "elastic-8.x"
+
+## Package to be installed (explicit version can be specified here)
+filebeat_pkg: filebeat
+
+## Name of the service
+filebeat_service: filebeat
+
+## Location of the Filebeat config file
+filebeat_config_file: /etc/filebeat/filebeat.yml

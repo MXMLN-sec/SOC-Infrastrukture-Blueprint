@@ -1,0 +1,8 @@
+# ansible-playbook playbook-role-filebeat.yaml --vault-password-file=.vault_password
+---
+- name: Install and configure Filebeat
+  hosts: 
+  become: true
+
+  roles:
+    - filebeat

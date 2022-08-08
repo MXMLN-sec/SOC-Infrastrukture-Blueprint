@@ -1,0 +1,27 @@
+# Input: Syslog
+- type: {{ syslog_logtype | mandatory }}
+  # Change to true to enable this input configuration.
+  enabled: {{ syslog_enabled | default('false')}}
+  # Paths that should be crawled and fetched. Glob based paths.
+  paths:
+{% for path in syslog_paths %}
+  - {{ path }}
+{% endfor %}
+  processors:
+    - add_host_metadata:
+    - add_labels:
+        labels:
+          Customer: {{ customer_name | capitalize | mandatory }}
+          Consumer: {{ consumer_name | capitalize | mandatory  }}
+          Project: {{ project_name | lower | mandatory }}
+          Environment: {{ customer_environment | lower | default('staging') }}
+    - add_fields:
+        target: ''
+        fields:
+          observer.product: {{ syslog_observer_product | mandatory  }}
+          observer.vendor: {{ syslog_observer_vendor | mandatory }}
+          observer.version: {{ syslog_observer_version | mandatory  }}
+          observer.type: {{ syslog_observer_type | mandatory }}
+          observer.name: {{ ansible_facts.hostname | mandatory }}
+          observer.os.type: {{ ansible_facts.system | mandatory }}
+          event.dataset: {{ syslog_event_dataset | mandatory  }}
