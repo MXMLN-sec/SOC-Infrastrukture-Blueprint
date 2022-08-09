@@ -23,12 +23,31 @@
     - configure
 
 
-- name: Create Filebeat config from multiple template files
+- name: Add inputs config line
+  ansible.builtin.lineinfile: 
+    dest: "{{ filebeat_config_file }}"
+    line: "filebeat.inputs:"
+  tags:
+    - configure
+
+
+- name: Create input Filebeat config from multiple template files
   ansible.builtin.blockinfile:
     dest: "{{ filebeat_config_file }}"
     marker: "## Rendering {{ item }}"
     block: |
       {{ lookup('template', '{{ role_path }}/templates/{{ item }}') }}
-  loop: "{{ applicable_templates }}"
+  loop: "{{ input_templates }}"
+  tags:
+    - configure
+
+
+- name: Create output Filebeat config from multiple template files
+  ansible.builtin.blockinfile:
+    dest: "{{ filebeat_config_file }}"
+    marker: "## Rendering {{ item }}"
+    block: |
+      {{ lookup('template', '{{ role_path }}/templates/{{ item }}') }}
+  loop: "{{ output_templates }}"
   tags:
     - configure
