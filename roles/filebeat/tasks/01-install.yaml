@@ -88,3 +88,34 @@
   tags:
     - install
     - install_materna_ca
+
+
+- name: "Check if original config file exists"
+  ansible.builtin.stat:
+    path: "{{ filebeat_config_file }}"
+  register: check_file_name_original
+  tags:
+    - install
+    - install_backup_config
+
+
+- name: "Check if backup config file exists"
+  ansible.builtin.stat:
+    path: "{{ filebeat_config_file }}.defaultconfig"
+  register: check_file_name_backup
+  tags:
+    - install
+    - install_backup_config
+
+
+- name: "Backup original config file to {{ filebeat_config_file }}.defaultconfig"
+  ansible.builtin.copy:
+    remote_src: true
+    src: "{{ filebeat_config_file }}"
+    dest: "{{ filebeat_config_file }}.defaultconfig"
+  when: >
+      check_file_name_original.stat.exists and
+      not check_file_name_backup.stat.exists
+  tags:
+    - install
+    - install_backup_config

@@ -1,8 +1,8 @@
 ---
-- name: Delete existing config file
-  ansible.builtin.file:
+- name: "Check if config file exists"
+  ansible.builtin.stat:
     path: "{{ filebeat_config_file }}"
-    state: absent
+  register: configfile_exists
   tags:
     - configure
 
@@ -11,6 +11,8 @@
   ansible.builtin.file:
     path: "{{ filebeat_config_file }}"
     state: touch
+  when: >
+    not configfile_exists.stat.exists
   tags:
     - configure
 
@@ -19,6 +21,8 @@
   ansible.builtin.lineinfile: 
     dest: "{{ filebeat_config_file }}"
     line: "{{ donotedit_disclaimer }}"
+  when: >
+    not configfile_exists.stat.exists
   tags:
     - configure
 
@@ -27,6 +31,8 @@
   ansible.builtin.lineinfile: 
     dest: "{{ filebeat_config_file }}"
     line: "filebeat.inputs:"
+  when: >
+    not configfile_exists.stat.exists
   tags:
     - configure
 
@@ -34,7 +40,8 @@
 - name: Create input Filebeat config from multiple template files
   ansible.builtin.blockinfile:
     dest: "{{ filebeat_config_file }}"
-    marker: "## Rendering {{ item }}"
+    marker: "## {mark} Rendering {{ item }}"
+    backup: yes
     block: |
       {{ lookup('template', '{{ role_path }}/templates/{{ item }}') }}
   loop: "{{ input_templates }}"
@@ -45,9 +52,12 @@
 - name: Create output Filebeat config from multiple template files
   ansible.builtin.blockinfile:
     dest: "{{ filebeat_config_file }}"
-    marker: "## Rendering {{ item }}"
+    marker: "## {mark} Rendering {{ item }}"
+    backup: yes
     block: |
       {{ lookup('template', '{{ role_path }}/templates/{{ item }}') }}
   loop: "{{ output_templates }}"
+  notify:
+    - Restart Filebeat service
   tags:
     - configure
