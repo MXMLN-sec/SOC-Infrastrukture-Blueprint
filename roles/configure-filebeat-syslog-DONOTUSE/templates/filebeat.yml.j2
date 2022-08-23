@@ -7,21 +7,25 @@
 
 filebeat.inputs:
 
-- type: log
-  enabled: true
-  paths:
-    - /var/log/messages
-  tags: ["localhost_messages_log"]
-  fields:
-    codec: plain
-    type: localhost_messages_log
+- type: journald
+  id: journal
+  include_matches.match:
+    - _TRANSPORT=journal
   processors:
     - add_host_metadata:
     - add_labels:
         labels:
           Customer: Materna
+          Consumer: Materna
           Project: test
           Environment: test
+    - add_fields:
+        target: ''
+        fields:
+          event.dataset: journal.all
+          event.category: systemd
+          event.type: access
+          event.kind: event
 
 setup.ilm.enabled: false
 
